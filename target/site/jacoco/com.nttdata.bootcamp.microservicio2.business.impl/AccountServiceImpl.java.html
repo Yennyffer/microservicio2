@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccountServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">microservicio2</a> &gt; <a href="index.source.html" class="el_package">com.nttdata.bootcamp.microservicio2.business.impl</a> &gt; <span class="el_source">AccountServiceImpl.java</span></div><h1>AccountServiceImpl.java</h1><pre class="source lang-java linenums">package com.nttdata.bootcamp.microservicio2.business.impl;
+
+import com.nttdata.bootcamp.microservicio2.business.AccountService;
+import com.nttdata.bootcamp.microservicio2.expose.AccountController;
+import com.nttdata.bootcamp.microservicio2.model.Account;
+import com.nttdata.bootcamp.microservicio2.model.AccountType;
+import com.nttdata.bootcamp.microservicio2.model.Customer;
+import com.nttdata.bootcamp.microservicio2.model.CustomerType;
+import com.nttdata.bootcamp.microservicio2.model.Dto.AccountDto;
+import com.nttdata.bootcamp.microservicio2.model.Dto.CustomerDto;
+import com.nttdata.bootcamp.microservicio2.repository.AccountRepository;
+import com.nttdata.bootcamp.microservicio2.utils.UserNotFoundException;
+
+import lombok.extern.slf4j.Slf4j;
+import java.util.NoSuchElementException;
+import java.util.Random;
+import org.reactivestreams.Publisher;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+/**
+ * [Description]. &lt;br/&gt;
+ * &lt;b&gt;Class&lt;/b&gt;: {@link AccountServiceImpl}&lt;br/&gt;
+ * &lt;b&gt;Copyright&lt;/b&gt;: &amp;Copy; 2022 NTT DATA SAC. &lt;br/&gt;
+ * &lt;b&gt;Company&lt;/b&gt;: NTT DATA SAC. &lt;br/&gt;
+ *
+ * @author Yennyffer Lizana &lt;br/&gt;
+ * &lt;u&gt;Developed by&lt;/u&gt;: &lt;br/&gt;
+ * &lt;ul&gt;
+ * &lt;li&gt;{USERNAME}. (acronym) From (YEN)&lt;/li&gt;
+ * &lt;/ul&gt;
+ * &lt;u&gt;Changes&lt;/u&gt;:&lt;br/&gt;
+ * &lt;ul&gt;
+ * &lt;li&gt;ene. 08, 2022 (acronym) Creation class.&lt;/li&gt;
+ * &lt;/ul&gt;
+ * @version 1.0
+ */
+
+<span class="fc" id="L42">@Slf4j</span>
+@Service
+<span class="fc" id="L44">public class AccountServiceImpl implements AccountService{</span>
+
+  @Autowired
+  private AccountRepository accountRepository;
+  @Autowired
+  private WebClient webClientUser;
+
+  public Mono&lt;Account&gt;create(Account account) {
+	 
+	try {
+		
+<span class="nc bnc" id="L55" title="All 4 branches missed.">		if( !account.getCustomer().getId().isBlank() &amp;&amp; account.getCustomer().getCustomerType().getDescription().equals(&quot;personal&quot;)) {</span>
+			
+<span class="nc bnc" id="L57" title="All 2 branches missed.">			if(findByCustomerId(account.getCustomer().getId()) == null ) {</span>
+<span class="nc" id="L58">				account.setCustomer(findByIdCustomerService(account.getCustomer().getId()).block());</span>
+<span class="nc" id="L59">				Random accountNumberRandom = new Random();</span>
+				
+<span class="nc" id="L61">				account.setAccountNumber(Long.toString(accountNumberRandom.nextLong()));</span>
+<span class="nc" id="L62">				account.setCurrency(&quot;Soles&quot;);</span>
+<span class="nc" id="L63">				account.setStatus(&quot;true&quot;);</span>
+<span class="nc" id="L64">				account.setAmountAvailable(0.0);</span>
+				
+<span class="nc" id="L66">				return accountRepository.insert(account);</span>
+			}else {
+<span class="nc" id="L68">				log.info(&quot;El cliente ya tiene cuenta creada&quot;);</span>
+<span class="nc" id="L69">				return null;</span>
+			}
+			
+<span class="nc bnc" id="L72" title="All 4 branches missed.">        } else if (!account.getCustomer().getId().isBlank() &amp;&amp; account.getCustomer().getCustomerType().getDescription().equals(&quot;empresarial&quot;)){</span>
+<span class="nc" id="L73">            log.warn(&quot;No se creó la cuenta&quot;);</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">            if(findByCustomerId(account.getCustomer().getId()) == null ) {</span>
+<span class="nc" id="L75">				account.setCustomer(findByIdCustomerService(account.getCustomer().getId()).block());</span>
+<span class="nc" id="L76">				Random accountNumberRandom = new Random();</span>
+				
+<span class="nc" id="L78">				account.setAccountNumber(Long.toString(accountNumberRandom.nextLong()));</span>
+<span class="nc" id="L79">				account.setCurrency(&quot;Soles&quot;);</span>
+<span class="nc" id="L80">				account.setStatus(&quot;true&quot;);</span>
+<span class="nc" id="L81">				account.getAccountType().setCodigo(&quot;002&quot;);</span>
+<span class="nc" id="L82">				account.setAmountAvailable(0.0);</span>
+				
+<span class="nc" id="L84">				return accountRepository.insert(account);</span>
+            }
+        }
+		
+<span class="nc" id="L88">	}catch(Exception e) {</span>
+<span class="nc" id="L89">		System.out.println(&quot;Something went wrong.&quot;);</span>
+<span class="nc" id="L90">	}</span>
+<span class="nc" id="L91">	return accountRepository.insert(account);</span>
+	
+  }
+  
+  private Mono&lt;Customer&gt; accountToCreateValidation(AccountDto accountForCreate, Customer customerExtracted) {
+<span class="nc" id="L96">      log.info(&quot;Existe un cliente&quot;);</span>
+      
+      //CustomerType:   personal = '1' y empresarial = '2'
+<span class="nc bnc" id="L99" title="All 2 branches missed.">      if (customerExtracted.getCustomerType().getCodigo().equals(&quot;1&quot;)){</span>
+<span class="nc" id="L100">          return findByCustomerId(customerExtracted.getId())</span>
+<span class="nc" id="L101">                  .filter(retrievedAccount -&gt; retrievedAccount.getStatus().equals(&quot;true&quot;))</span>
+<span class="nc" id="L102">                  .hasElements()</span>
+<span class="nc" id="L103">                  .flatMap(haveAnAccount -&gt; {</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">                      if (haveAnAccount) {</span>
+<span class="nc" id="L105">                          return Mono.error(new UserNotFoundException(&quot;Cliente ya tiene una cuenta&quot;));</span>
+                      }
+                      else {
+<span class="nc" id="L108">                          log.info(&quot;Account successfully validated&quot;);</span>
+<span class="nc" id="L109">                          return Mono.just(customerExtracted);</span>
+                      }
+                  });
+      } else {
+<span class="nc" id="L113">          log.info(&quot;Credit successfully validated&quot;);</span>
+<span class="nc" id="L114">          return Mono.just(customerExtracted);</span>
+      }
+  }
+
+  @Override
+  public Mono&lt;Customer&gt; findByIdCustomerService(String id) {
+<span class="nc" id="L120">      log.info(&quot;Obteniendo cliente con id:&quot;, id);</span>
+<span class="nc" id="L121">      return webClientUser.get()</span>
+<span class="nc" id="L122">    		  .uri(uriBuilder -&gt; uriBuilder</span>
+<span class="nc" id="L123">                      .path(&quot;v1/customers/&quot;+ id)</span>
+<span class="nc" id="L124">                      .build())</span>
+<span class="nc" id="L125">              .retrieve()</span>
+<span class="nc" id="L126">              .bodyToMono(Customer.class);</span>
+     
+  }
+
+@Override
+  public Mono&lt;Account&gt; findById(String accountId) {
+<span class="nc" id="L132">    return accountRepository.findById(accountId);</span>
+  }
+
+  @Override
+  public Flux&lt;Account&gt; findAll() {
+<span class="nc" id="L137">    return accountRepository.findAll();</span>
+  }
+
+  @Override
+  public Mono&lt;Account&gt; update(Account account) {
+<span class="nc" id="L142">    return accountRepository.save(account);</span>
+  }
+
+  @Override
+  public Mono&lt;Account&gt; change(Account account) {
+<span class="nc" id="L147">    return accountRepository.findById(account.getId())</span>
+<span class="nc" id="L148">        .flatMap(accountDB -&gt; {</span>
+<span class="nc" id="L149">          return create(account);</span>
+        })
+<span class="nc" id="L151">        .switchIfEmpty(Mono.empty());</span>
+  }
+
+  @Override
+  public Mono&lt;Account&gt; remove(String accountId) {
+<span class="nc" id="L156">    return accountRepository</span>
+<span class="nc" id="L157">        .findById(accountId)</span>
+<span class="nc" id="L158">        .flatMap(p -&gt; accountRepository.deleteById(p.getId()).thenReturn(p));</span>
+
+  }
+
+
+
+@Override
+public Flux&lt;Account&gt; findByCustomerId(String id) {
+<span class="nc" id="L166">    log.info(&quot;End of operation to retrieve accounts of the customer with id: [{}]&quot;, id);</span>
+<span class="nc" id="L167">    return accountRepository.findAccountsByCustomerId(id);</span>
+    //findAccountsByCustomerId
+}
+
+@Override
+public Mono&lt;Account&gt; findAccountByCustomerId(Customer customerId) {
+	
+<span class="nc" id="L174">	return accountRepository.findAccountByCustomerId(customerId);</span>
+}
+
+
+
+  
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

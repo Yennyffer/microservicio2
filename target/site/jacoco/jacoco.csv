@@ -1,0 +1,13 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+microservicio2,com.nttdata.bootcamp.microservicio2.utils,UserNotFoundException,4,0,0,0,2,0,1,0,1,0
+microservicio2,com.nttdata.bootcamp.microservicio2.expose,AccountController,99,7,0,0,22,2,12,2,12,2
+microservicio2,com.nttdata.bootcamp.microservicio2,Microservicio2Application,5,3,0,0,2,1,1,1,1,1
+microservicio2,com.nttdata.bootcamp.microservicio2.config,WebClientConfig,0,25,0,0,0,6,0,2,0,2
+microservicio2,com.nttdata.bootcamp.microservicio2.model,Customer,86,0,0,0,11,0,18,0,18,0
+microservicio2,com.nttdata.bootcamp.microservicio2.model,CustomerType,26,0,0,0,5,0,6,0,6,0
+microservicio2,com.nttdata.bootcamp.microservicio2.model,TypeDocumentIdentity,26,0,0,0,5,0,6,0,6,0
+microservicio2,com.nttdata.bootcamp.microservicio2.model,Account,108,0,0,0,14,0,21,0,21,0
+microservicio2,com.nttdata.bootcamp.microservicio2.model,AccountType,36,0,0,0,6,0,8,0,8,0
+microservicio2,com.nttdata.bootcamp.microservicio2.model.Dto,AccountDto,46,0,0,0,7,0,10,0,10,0
+microservicio2,com.nttdata.bootcamp.microservicio2.model.Dto,CustomerDto,36,0,0,0,6,0,8,0,8,0
+microservicio2,com.nttdata.bootcamp.microservicio2.business.impl,AccountServiceImpl,252,7,16,0,58,2,23,2,15,2

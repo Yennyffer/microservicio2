@@ -1,0 +1,14 @@
+application:
+  endpoints:
+    url:
+      valid_address: http://localhost:8081/api/
+
+spring:
+  application:
+    name: microservicio2
+
+  cloud:
+    config:
+      uri: http://localhost:8888
+      username: root
+      password: pr0y3ct1

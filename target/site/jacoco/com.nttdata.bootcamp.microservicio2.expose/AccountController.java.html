@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccountController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">microservicio2</a> &gt; <a href="index.source.html" class="el_package">com.nttdata.bootcamp.microservicio2.expose</a> &gt; <span class="el_source">AccountController.java</span></div><h1>AccountController.java</h1><pre class="source lang-java linenums">package com.nttdata.bootcamp.microservicio2.expose;
+
+import com.nttdata.bootcamp.microservicio2.model.Account;
+import com.nttdata.bootcamp.microservicio2.model.Customer;
+import com.nttdata.bootcamp.microservicio2.model.Dto.CustomerDto;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
+import com.nttdata.bootcamp.microservicio2.business.AccountService;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+/**
+ * [Description]. &lt;br/&gt;
+ * &lt;b&gt;Class&lt;/b&gt;: {@link AccountController}&lt;br/&gt;
+ * &lt;b&gt;Copyright&lt;/b&gt;: &amp;Copy; 2022 NTT DATA SAC. &lt;br/&gt;
+ * &lt;b&gt;Company&lt;/b&gt;: NTT DATA SAC. &lt;br/&gt;
+ *
+ * @author Yennyffer Lizana &lt;br/&gt;
+ * &lt;u&gt;Developed by&lt;/u&gt;: &lt;br/&gt;
+ * &lt;ul&gt;
+ * &lt;li&gt;{USERNAME}. (acronym) From (YEN)&lt;/li&gt;
+ * &lt;/ul&gt;
+ * &lt;u&gt;Changes&lt;/u&gt;:&lt;br/&gt;
+ * &lt;ul&gt;
+ * &lt;li&gt;ene. 08, 2022 (acronym) Creation class.&lt;/li&gt;
+ * &lt;/ul&gt;
+ * @version 1.0
+ */
+
+
+@RestController
+<span class="fc" id="L47">@Slf4j</span>
+<span class="fc" id="L48">public class AccountController {</span>
+
+  @Autowired
+  private AccountService accountService;
+  private static final String ACCOUNT_DELETE =  &quot;DeleteAccount&quot;;
+  private static final String ACCOUNT_UPDATE =  &quot;UpdateAccount&quot;;
+
+
+  @GetMapping(&quot;api/v1/customers/{id}&quot;)
+  public Mono&lt;Customer&gt; findByIdCustomerService(@PathVariable(&quot;id&quot;) String customerId) {
+<span class="nc" id="L58">    log.info(&quot;Obtengo customer by id:&quot;, customerId);</span>
+<span class="nc" id="L59">    return accountService.findByIdCustomerService(customerId);</span>
+  }
+  
+  
+  @GetMapping(&quot;/api/v1/accounts/{id}&quot;)
+  public Mono&lt;Account&gt; byId(@PathVariable(&quot;id&quot;) String id) {
+<span class="nc" id="L65">    log.info(&quot;byId&gt;&gt;&gt;&gt;&gt;&quot;);</span>
+<span class="nc" id="L66">    return accountService.findById(id);</span>
+  }
+  
+  @GetMapping(&quot;/api/v1/accounts-all&quot;)
+  public Flux&lt;Account&gt; findAll() {
+<span class="nc" id="L71">    log.info(&quot;findAll&gt;&gt;&gt;&gt;&gt;&quot;);</span>
+
+<span class="nc" id="L73">    return accountService.findAll();</span>
+  }
+
+  @PostMapping(&quot;/api/v1/account/&quot;)
+  @ResponseStatus(HttpStatus.CREATED)
+  public Mono&lt;Account&gt; create(@RequestBody Account account) {
+<span class="nc" id="L79">    log.info(&quot;create&gt;&gt;&gt;&gt;&gt;&quot;);</span>
+<span class="nc" id="L80">    return accountService.create(account);</span>
+  }
+
+  @CircuitBreaker(name=ACCOUNT_UPDATE, fallbackMethod=&quot;fallbackUpdateAccount&quot;)
+  @PutMapping(&quot;/api/v1/account/&quot;)
+  public Mono&lt;ResponseEntity&lt;Account&gt;&gt; update(@RequestBody Account account) {
+<span class="nc" id="L86">    log.info(&quot;update&gt;&gt;&gt;&gt;&gt;&quot;);</span>
+<span class="nc" id="L87">    return accountService.update(account)</span>
+<span class="nc" id="L88">        .flatMap(accountUpdate -&gt; Mono.just(ResponseEntity.ok(accountUpdate)))</span>
+<span class="nc" id="L89">        .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));</span>
+  }
+
+  @PatchMapping(&quot;/api/v1/accounts&quot;)
+  public Mono&lt;ResponseEntity&lt;Account&gt;&gt; change(@RequestBody Account account) {
+<span class="nc" id="L94">    log.info(&quot;change&gt;&gt;&gt;&gt;&gt;&quot;);</span>
+<span class="nc" id="L95">    return accountService.change(account)</span>
+<span class="nc" id="L96">        .flatMap(accountUpdate -&gt; Mono.just(ResponseEntity.ok(accountUpdate)))</span>
+<span class="nc" id="L97">        .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));</span>
+  }
+
+  @CircuitBreaker(name=ACCOUNT_DELETE, fallbackMethod=&quot;fallbackDeleteAccount&quot;)
+  @DeleteMapping(&quot;/api/v1/accounts/{id}&quot;)
+  public Mono&lt;ResponseEntity&lt;Account&gt;&gt; delete(@PathVariable(&quot;id&quot;) String id) {
+<span class="nc" id="L103">    log.info(&quot;delete&gt;&gt;&gt;&gt;&gt;&quot;);</span>
+<span class="nc" id="L104">    return accountService.remove(id)</span>
+<span class="nc" id="L105">        .flatMap(account -&gt; Mono.just(ResponseEntity.ok(account)))</span>
+<span class="nc" id="L106">        .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));</span>
+  }
+  
+  
+  public Mono&lt;ResponseEntity&lt;String&gt;&gt; fallbackUpdateAccount(@RequestBody Account account,RuntimeException ex) {
+<span class="nc" id="L111">	  return Mono.just(ResponseEntity.ok().body(&quot;Actualizando cuenta: &quot;+ account.getAccountNumber()+ &quot;Servicio no disponible.&quot;));	  </span>
+}
+
+  public Mono&lt;ResponseEntity&lt;String&gt;&gt; fallbackDeleteAccount(@PathVariable(&quot;id&quot;) String id, RuntimeException ex) {
+<span class="nc" id="L115">    return Mono.just(ResponseEntity.ok().body(&quot;Se buscó el id: &quot; + id + &quot; Servicio no disponible.&quot;));</span>
+  }
+  
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

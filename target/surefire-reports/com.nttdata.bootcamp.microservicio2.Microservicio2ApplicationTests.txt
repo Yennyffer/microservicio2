@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.nttdata.bootcamp.microservicio2.Microservicio2ApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 99.806 s - in com.nttdata.bootcamp.microservicio2.Microservicio2ApplicationTests

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WebClientConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">microservicio2</a> &gt; <a href="index.source.html" class="el_package">com.nttdata.bootcamp.microservicio2.config</a> &gt; <span class="el_source">WebClientConfig.java</span></div><h1>WebClientConfig.java</h1><pre class="source lang-java linenums">package com.nttdata.bootcamp.microservicio2.config;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.client.WebClient;
+
+/**
+ * [Description]. &lt;br/&gt;
+ * &lt;b&gt;Class&lt;/b&gt;: {@link WebClientConfig}&lt;br/&gt;
+ * &lt;b&gt;Copyright&lt;/b&gt;: &amp;Copy; 2022 NTT DATA SAC. &lt;br/&gt;
+ * &lt;b&gt;Company&lt;/b&gt;: NTT DATA SAC. &lt;br/&gt;
+ *
+ * @author Yennyffer Lizana &lt;br/&gt;
+ * &lt;u&gt;Developed by&lt;/u&gt;: &lt;br/&gt;
+ * &lt;ul&gt;
+ * &lt;li&gt;{USERNAME}. (acronym) From (YEN)&lt;/li&gt;
+ * &lt;/ul&gt;
+ * &lt;u&gt;Changes&lt;/u&gt;:&lt;br/&gt;
+ * &lt;ul&gt;
+ * &lt;li&gt;ene. 11, 2022 (acronym) Creation class.&lt;/li&gt;
+ * &lt;/ul&gt;
+ * @version 1.0
+ */
+
+@Configuration
+<span class="fc" id="L29">public class WebClientConfig {</span>
+	
+	@Value(&quot;${application.endpoints.url.valid_address}&quot;)
+	  private String urlEndpoint;
+
+	  @Bean
+	  public WebClient webClientUser() {
+
+<span class="fc" id="L37">	    return WebClient.builder()</span>
+<span class="fc" id="L38">	        .baseUrl(urlEndpoint)</span>
+<span class="fc" id="L39">	        .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)</span>
+<span class="fc" id="L40">	        .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)</span>
+<span class="fc" id="L41">	        .build();</span>
+	  }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
