@@ -2,6 +2,7 @@ package com.nttdata.bootcamp.microservicio2.expose;
 
 import com.nttdata.bootcamp.microservicio2.business.AccountService;
 import com.nttdata.bootcamp.microservicio2.model.*;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.Address;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient(timeout = "20000")
 class AccountControllerTest {
@@ -78,7 +80,7 @@ class AccountControllerTest {
 
     @Test
     void byId() {
-        System.out.println("--Metodo GET: Obtener una cuenta por ID--");
+        log.info("--Metodo GET: Obtener una cuenta por ID--");
         Mockito.when(accountService.findById(id)).thenReturn(Mono.just(mockAccount));
 
         webTestClient.get().uri("/api/v1/accounts/" + id)
@@ -88,7 +90,7 @@ class AccountControllerTest {
 
     @Test
     void findAll() {
-        System.out.println("--Metodo GET: Obtener todos las cuentas registradas--");
+        log.info("--Metodo GET: Obtener todos las cuentas registradas--");
         Mockito.when(accountService.findAll()).thenReturn(Flux.fromIterable(accountListMock));
 
         webTestClient.get().uri("/api/v1/accounts/all")
@@ -98,19 +100,19 @@ class AccountControllerTest {
 
     @Test
     void create() {
-        System.out.println("--Metodo POST: Agregar una nueva clcuentaiente--");
+        log.info("--Metodo POST: Agregar una nueva cuenta--");
         Mockito.when(accountService.create(mockAccount)).thenReturn(Mono.just(mockAccount));
     }
 
     @Test
     void update() {
-        System.out.println("--Metodo UPDATE: Actualizar una cuenta--");
+        log.info("--Metodo UPDATE: Actualizar una cuenta--");
         Mockito.when(accountService.update(mockAccount)).thenReturn(Mono.just(mockAccount));
     }
 
     @Test
     void delete() {
-        System.out.println("--Metodo DELETE: Eliminar un cliente por ID--");
+        log.info("--Metodo DELETE: Eliminar una cuenta por ID--");
         Mockito.when(accountService.remove(id)).thenReturn(Mono.just(mockAccount));
 
         webTestClient.delete().uri("/api/v1/accounts/" + id)
