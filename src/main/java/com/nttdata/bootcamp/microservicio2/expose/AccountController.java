@@ -66,7 +66,7 @@ public class AccountController {
     return accountService.findById(id);
   }
   
-  @GetMapping("/api/v1/accounts-all")
+  @GetMapping("/api/v1/accounts/all")
   public Flux<Account> findAll() {
     log.info("findAll>>>>>");
 
