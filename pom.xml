@@ -186,7 +186,9 @@
           <destFile>${project.basedir}/target/jacoco.exec</destFile>
           <append>true</append>
           <excludes>
-            <exclude>com/nttdata/bootcamp/*/model/thirdparty/**/*</exclude>
+              <exclude>**/utils/*</exclude>
+              <exclude>**/repository/*</exclude>
+              <exclude>**/model/*</exclude>
           </excludes>
         </configuration>
         <executions>
@@ -253,8 +255,9 @@
           <destFile>${project.basedir}/target/jacoco.exec</destFile>
           <append>true</append>
           <excludes>
-            <exclude>com/tdp/ms/*/model/thirdparty/**/*</exclude>
-            <exclude>com/tdp/ms/*/eventflow/**/*</exclude>
+              <exclude>**/utils/*</exclude>
+              <exclude>**/repository/*</exclude>
+              <exclude>**/model/*</exclude>
           </excludes>
         </configuration>
       </plugin>
